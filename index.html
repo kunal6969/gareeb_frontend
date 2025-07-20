@@ -312,16 +312,12 @@
     }
 </style>
 <script>
-    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark')
-    } else {
-        document.documentElement.classList.remove('dark')
-    }
+    // Force dark mode - no theme switching functionality
+    document.documentElement.classList.add('dark');
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-slate-100 text-slate-800 dark:bg-gray-950 dark:text-slate-200 min-h-screen antialiased">
+  <body class="bg-gray-950 text-slate-200 min-h-screen antialiased">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>

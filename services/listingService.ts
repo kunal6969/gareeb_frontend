@@ -5,14 +5,29 @@ export const uploadAllotmentProof = async (file: File): Promise<{ allotmentProof
     const formData = new FormData();
     formData.append('allotmentProof', file);
 
+    // Get JWT token for authentication
+    const token = localStorage.getItem('authToken');
+    const headers: HeadersInit = {};
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
     // Use fetch directly for file upload instead of our JSON API wrapper
     const response = await fetch('http://localhost:5001/api/listings/upload-proof', {
         method: 'POST',
-        credentials: 'include', // Important for authentication
+        headers,
         body: formData
     });
 
     if (!response.ok) {
+        // Handle 401 unauthorized
+        if (response.status === 401) {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            window.location.hash = '#/login';
+            throw new Error('Authentication required. Please log in again.');
+        }
+        
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to upload allotment proof');
     }

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { HashRouter, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import { AuthContextProvider, useAuth } from './contexts/AuthContext';
-import { ThemeContextProvider, useTheme } from './contexts/ThemeContext';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import HostelRoomsPage from './pages/HostelRoomsPage'; 
@@ -9,21 +8,8 @@ import EventsPage from './pages/EventsPage';
 import CgpaPage from './pages/CgpaPage';
 import { Spinner, Button } from './components/UIElements'; 
 import { 
-    Gradients, SunIcon, MoonIcon, HomeIcon, LogoutIcon, LoginIcon, BuildingIcon, CalendarDaysIcon, ChartPieIcon, XMarkIcon, MenuIcon as VibrantMenuIcon
+    Gradients, HomeIcon, LogoutIcon, LoginIcon, BuildingIcon, CalendarDaysIcon, ChartPieIcon, XMarkIcon, MenuIcon as VibrantMenuIcon
 } from './components/VibrantIcons';
-
-const ThemeToggle: React.FC = () => {
-    const { theme, toggleTheme } = useTheme();
-    return (
-        <button
-            onClick={toggleTheme} 
-            className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-200" 
-            aria-label="Toggle theme" 
-        >
-            {theme === 'light' ? <MoonIcon className="w-7 h-7" /> : <SunIcon className="w-7 h-7" />}
-        </button>
-    );
-};
 
 const Navbar: React.FC = () => {
   const { user, logout, loading } = useAuth();
@@ -143,12 +129,10 @@ const Navbar: React.FC = () => {
                       <LogoutIcon />
                   </Button>
                )}
-               <ThemeToggle />
             </div>
 
             {/* Mobile controls */}
             <div className="flex items-center gap-x-1 md:hidden">
-              <ThemeToggle />
               {user && (
                 <Button onClick={logout} variant="ghost" size="sm" className="!p-2" title="Logout">
                   <LogoutIcon className="h-7 w-7" />
@@ -215,14 +199,12 @@ const AppBody: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <ThemeContextProvider>
-        <AuthContextProvider>
-        <Gradients />
-        <HashRouter>
-            <AppBody />
-        </HashRouter>
-        </AuthContextProvider>
-    </ThemeContextProvider>
+    <AuthContextProvider>
+      <Gradients />
+      <HashRouter>
+        <AppBody />
+      </HashRouter>
+    </AuthContextProvider>
   );
 };
 

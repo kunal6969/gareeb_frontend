@@ -1,5 +1,5 @@
-// In a real app, this would be an environment variable.
-const API_BASE_URL = 'http://localhost:5001/api';
+// API Base URL - can be configured via environment variable
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001/api';
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -17,8 +17,28 @@ class ApiError extends Error {
   }
 }
 
+// Helper function to get auth token from localStorage
+function getAuthToken(): string | null {
+  return localStorage.getItem('authToken');
+}
+
+// Helper function to clear auth data
+function clearAuthData(): void {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('user');
+}
+
 async function handleResponse<T>(response: Response): Promise<T> {
   const contentType = response.headers.get('content-type');
+
+  // Handle 401 Unauthorized - token expired or invalid
+  if (response.status === 401) {
+    clearAuthData();
+    // Redirect to login page
+    if (window.location.pathname !== '/login') {
+      window.location.href = '/login';
+    }
+  }
 
   if (contentType && contentType.includes('application/json')) {
     const jsonResponse = await response.json() as ApiResponse<T>;
@@ -49,14 +69,16 @@ async function handleResponse<T>(response: Response): Promise<T> {
 
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
+  const token = getAuthToken();
 
   const defaultOptions: RequestInit = {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
+      // Add Authorization header if token exists
+      ...(token && { Authorization: `Bearer ${token}` }),
     },
-    // This is crucial for sending/receiving cookies (like JWT)
-    credentials: 'include',
+    // Remove credentials: 'include' - no longer needed for JWT
   };
 
   const config: RequestInit = {

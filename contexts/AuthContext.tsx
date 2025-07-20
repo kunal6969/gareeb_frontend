@@ -8,27 +8,68 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // Load authentication state from localStorage on app start
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const storedToken = localStorage.getItem('authToken');
+      const storedUser = localStorage.getItem('user');
+      
+      if (storedToken && storedUser) {
+        try {
+          const userData = JSON.parse(storedUser);
+          setUser(userData);
+          
+          // Optionally verify token with backend
+          try {
+            const currentUser = await api.get<User>('/user/me');
+            setUser(currentUser);
+          } catch (error) {
+            console.log("Token invalid, clearing stored data");
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            setUser(null);
+          }
+        } catch (error) {
+          console.error('Failed to parse stored user data:', error);
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
+        }
+      }
+      setLoading(false);
+    };
+
+    initializeAuth();
+  }, []);
+
   const fetchUser = useCallback(async () => {
     try {
       const userData = await api.get<User>('/user/me');
       setUser(userData);
+      // Update localStorage with fresh user data
+      localStorage.setItem('user', JSON.stringify(userData));
     } catch (error) {
       console.log("No authenticated user found or session expired.");
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
       setUser(null);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
-
   const login = useCallback(async (email: string, password: string): Promise<void> => {
     setLoading(true);
     try {
-      const response = await api.post<{ user: User }>('/auth/login', { email, password });
-      setUser(response.user);
+      const response = await api.post<{ user: User; token: string }>('/auth/login', { email, password });
+      
+      // Extract token and user from response
+      const { token, user: userData } = response;
+      
+      // Store token and user in localStorage
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      setUser(userData);
     } catch (error) {
       console.error("Login failed:", error);
       throw error; // Re-throw to be caught by the form
@@ -37,16 +78,24 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   }, []);
 
-  const loginWithUserData = useCallback((user: User) => {
+  const loginWithUserData = useCallback((user: User, token?: string) => {
     setUser(user);
+    // If token is provided, store it
+    if (token) {
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('user', JSON.stringify(user));
+    }
   }, []);
 
   const register = useCallback(async (email: string, password: string, fullName: string, gender: User['gender'], whatsappNumber: string): Promise<void> => {
     setLoading(true);
     try {
-      const response = await api.post<{ user: User; autoLogin: boolean }>('/auth/register', { email, password, fullName, gender, whatsappNumber });
-      // If autoLogin is true, set the user immediately
-      if (response.autoLogin && response.user) {
+      const response = await api.post<{ user: User; autoLogin: boolean; token?: string }>('/auth/register', { email, password, fullName, gender, whatsappNumber });
+      
+      // If autoLogin is true and token is provided, set the user immediately
+      if (response.autoLogin && response.user && response.token) {
+        localStorage.setItem('authToken', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
         setUser(response.user);
       }
       // Registration successful
@@ -62,8 +111,11 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     try {
       await api.post('/auth/logout');
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.log("Logout request failed, but proceeding with client-side logout.");
     } finally {
+      // Clear all authentication data
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
       setUser(null);
     }
   }, []);
@@ -71,11 +123,15 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ childre
   const updateUserPreferences = useCallback(async (prefs: ExchangePreferences) => {
     const updatedUser = await api.patch<User>('/user/preferences', prefs);
     setUser(updatedUser);
+    // Update localStorage with fresh user data
+    localStorage.setItem('user', JSON.stringify(updatedUser));
   }, []);
 
   const updateUserDetails = useCallback(async (detailsToUpdate: Partial<Pick<User, 'fullName' | 'rollNumber' | 'phoneNumber' | 'whatsappNumber' | 'gender'>>) => {
     const updatedUser = await api.patch<User>('/user/details', detailsToUpdate);
     setUser(updatedUser);
+    // Update localStorage with fresh user data
+    localStorage.setItem('user', JSON.stringify(updatedUser));
   }, []);
   
   const refreshUser = useCallback(async () => {
