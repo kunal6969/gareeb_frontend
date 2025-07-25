@@ -99,14 +99,12 @@ interface SelectProps {
   buttonClassName?: string;
   required?: boolean;
   disabled?: boolean;
-  isGradeSelect?: boolean; // New prop to identify grade selects
 }
 
-export const Select: React.FC<SelectProps> = ({ label, id, error, options, value, onChange, className = '', buttonClassName = '', placeholder, icon, required, disabled, isGradeSelect = false }) => {
+export const Select: React.FC<SelectProps> = ({ label, id, error, options, value, onChange, className = '', buttonClassName = '', placeholder, icon, required, disabled }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
-  const selectedOption = options.find(opt => opt.value === value);
-  const selectedLabel = selectedOption?.label || placeholder || 'Select...';
+  const selectedLabel = options.find(opt => opt.value === value)?.label || placeholder || 'Select...';
 
   const handleSelect = (optionValue: string) => {
     onChange(optionValue);
@@ -123,166 +121,55 @@ export const Select: React.FC<SelectProps> = ({ label, id, error, options, value
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Enhanced styling for grade selection
-  const getGradeColor = (gradeValue: string) => {
-    const grade = parseFloat(gradeValue);
-    if (grade >= 9) return 'text-emerald-400';
-    if (grade >= 7) return 'text-cyan-400';
-    if (grade >= 5) return 'text-yellow-400';
-    if (grade >= 4) return 'text-orange-400';
-    return 'text-red-400';
-  };
-
-  const getGradeBgColor = (gradeValue: string) => {
-    const grade = parseFloat(gradeValue);
-    if (grade >= 9) return 'bg-emerald-500/10 border-emerald-500/30';
-    if (grade >= 7) return 'bg-cyan-500/10 border-cyan-500/30';
-    if (grade >= 5) return 'bg-yellow-500/10 border-yellow-500/30';
-    if (grade >= 4) return 'bg-orange-500/10 border-orange-500/30';
-    return 'bg-red-500/10 border-red-500/30';
-  };
-
   return (
     <div className={`w-full ${className}`} ref={selectRef}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+        <label htmlFor={id} className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           {label}{required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
-      <div className="relative">
+      <div className="relative mt-1">
         <button
           type="button"
           id={id}
-          className={`relative w-full cursor-default rounded-lg py-3 pl-4 pr-12 text-left shadow-lg border-2 transition-all duration-200 ease-out ${
-            selectedOption && isGradeSelect
-              ? `${getGradeBgColor(selectedOption.value)} ${getGradeColor(selectedOption.value)} font-semibold` 
-              : selectedOption
-              ? 'bg-slate-800/50 border-slate-600 text-slate-200 font-medium'
-              : 'bg-slate-800/50 border-slate-600 text-slate-400 hover:border-cyan-500/50'
-          } ${error ? 'border-red-500/50 bg-red-500/10' : ''} ${
-            disabled ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]'
-          } ${isOpen ? 'ring-2 ring-cyan-500/50 border-cyan-500' : ''} ${buttonClassName}`}
+          className={`relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm ${error ? 'border-red-500' : ''} ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''} ${buttonClassName}`}
           onClick={() => !disabled && setIsOpen(!isOpen)}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           disabled={disabled}
         >
-          {icon && <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">{icon}</span>}
-          <span className={`block truncate text-base ${icon ? 'ml-6' : ''}`}>
-            {selectedOption ? (
-              isGradeSelect ? (
-                <span className="flex items-center gap-2">
-                  <span className="font-bold">{selectedOption.label.split(' - ')[0]}</span>
-                  <span className="text-sm opacity-80">({selectedOption.label.split(' - ')[1]})</span>
-                </span>
-              ) : (
-                <span>{selectedOption.label}</span>
-              )
-            ) : (
-              <span className="italic">{selectedLabel}</span>
-            )}
-          </span>
-          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-            <svg 
-              className={`h-6 w-6 transition-all duration-300 ${
-                isOpen ? 'rotate-180 text-cyan-400' : 'rotate-0 text-slate-500'
-              } ${selectedOption && isGradeSelect ? getGradeColor(selectedOption.value) : ''}`} 
-              viewBox="0 0 20 20" 
-              fill="currentColor" 
-              aria-hidden="true"
-            >
-              <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+           {icon && <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">{icon}</span>}
+          <span className={`block truncate ${icon ? 'ml-6' : ''}`}>{selectedLabel}</span>
+          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <svg className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fillRule="evenodd" d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 6.53 8.28a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.53a.75.75 0 011.06 0L10 15.19l3.5-3.5a.75.75 0 111.06 1.06l-4 4a.75.75 0 01-1.06 0l-4-4a.75.75 0 010-1.06z" clipRule="evenodd" />
             </svg>
           </span>
         </button>
 
         {isOpen && !disabled && (
-          <div className="absolute z-50 mt-2 w-full max-h-64 overflow-auto rounded-xl bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 shadow-2xl animate-pop-in">
-            <div className="py-2">
-              {placeholder && !options.some(opt => opt.value === '') && (
-                <div
-                  onClick={() => handleSelect('')}
-                  className="text-slate-400 relative cursor-pointer select-none py-3 px-4 transition-all duration-200 hover:bg-slate-700/50 hover:text-slate-300 rounded-lg mx-2 italic"
-                >
-                  <span className="text-sm">{placeholder}</span>
-                </div>
-              )}
-              {options.map((option, index) => {
-                const isSelected = value === option.value;
-                
-                if (isGradeSelect) {
-                  // Grade-specific rendering
-                  const gradeInfo = option.label.split(' - ');
-                  const gradeLetter = gradeInfo[0];
-                  const gradePoints = gradeInfo[1];
-                  
-                  return (
-                    <div
-                      key={option.value}
-                      onClick={() => handleSelect(option.value)}
-                      className={`dropdown-option relative cursor-pointer select-none py-3 px-4 mx-2 rounded-lg transition-all duration-300 transform hover:scale-[1.02] ${
-                        isSelected 
-                          ? `${getGradeBgColor(option.value)} ${getGradeColor(option.value)} shadow-lg border ${getGradeBgColor(option.value).split(' ')[1]}` 
-                          : `text-slate-300 hover:bg-slate-700/50 hover:${getGradeColor(option.value)} hover:shadow-md`
-                      }`}
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className={`font-bold text-lg ${isSelected ? getGradeColor(option.value) : 'text-slate-200'}`}>
-                            {gradeLetter}
-                          </span>
-                          <span className={`text-sm font-medium ${isSelected ? 'opacity-90' : 'opacity-70'}`}>
-                            Grade Point: {gradePoints}
-                          </span>
-                        </div>
-                        {isSelected && (
-                          <svg className={`w-5 h-5 ${getGradeColor(option.value)}`} fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        )}
-                      </div>
-                    </div>
-                  );
-                } else {
-                  // Regular option rendering (for room listing, hostels, etc.)
-                  return (
-                    <div
-                      key={option.value}
-                      onClick={() => handleSelect(option.value)}
-                      className={`dropdown-option relative cursor-pointer select-none py-3 px-4 mx-2 rounded-lg transition-all duration-300 transform hover:scale-[1.02] ${
-                        isSelected 
-                          ? 'bg-cyan-500/20 text-cyan-300 shadow-lg border border-cyan-500/30' 
-                          : 'text-slate-300 hover:bg-slate-700/50 hover:text-cyan-300 hover:shadow-md'
-                      }`}
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-base">
-                          {option.label}
-                        </span>
-                        {isSelected && (
-                          <svg className="w-5 h-5 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        )}
-                      </div>
-                    </div>
-                  );
-                }
-              })}
-            </div>
+          <div className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            {placeholder && !options.some(opt => opt.value === '') && (
+              <div
+                onClick={() => handleSelect('')}
+                className="text-gray-400 relative cursor-default select-none py-2 pl-3 pr-9"
+              >
+                {placeholder}
+              </div>
+            )}
+            {options.map((option) => (
+              <div
+                key={option.value}
+                onClick={() => handleSelect(option.value)}
+                className={`relative cursor-default select-none py-2 pl-3 pr-9 ${value === option.value ? 'text-white bg-indigo-600' : 'text-gray-900'}`}
+              >
+                <span className="font-normal block truncate">{option.label}</span>
+              </div>
+            ))}
           </div>
         )}
       </div>
-      {error && (
-        <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-          </svg>
-          {error}
-        </p>
-      )}
+      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
     </div>
   );
 };

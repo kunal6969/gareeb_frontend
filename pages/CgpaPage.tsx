@@ -4,8 +4,6 @@ import * as cgpaService from '../services/cgpaService';
 import { Button, Input, Select } from '../components/UIElements';
 import { TrashIcon, PlusIcon, ChartPieIcon, SparkleIcon } from '../components/VibrantIcons';
 import LoadingIndicator from '../components/LoadingIndicator';
-import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 // --- Helper Types ---
 interface Subject {
@@ -192,16 +190,12 @@ const SgpaCalculator: FC = () => {
     );
 };
 
-const CgpaCalculator: FC<{ user: any }> = ({ user }) => {
+const CgpaCalculator: FC = () => {
     const [cgpaData, setCgpaData] = useState<CgpaData>({ semesters: [] });
     const [isLoading, setIsLoading] = useState(true);
     const [prediction, setPrediction] = useState({ futureSgpa: '', futureCredits: '' });
 
     useEffect(() => {
-        if (!user) {
-            setIsLoading(false);
-            return;
-        };
         const fetchData = async () => {
             setIsLoading(true);
             const data = await cgpaService.getCgpaData();
@@ -212,7 +206,7 @@ const CgpaCalculator: FC<{ user: any }> = ({ user }) => {
             setIsLoading(false);
         };
         fetchData();
-    }, [user]);
+    }, []);
     
     const handleSemesterChange = (id: string, field: 'sgpa' | 'credits', value: string) => {
         if (!/^\d*\.?\d*$/.test(value)) return;
@@ -263,14 +257,19 @@ const CgpaCalculator: FC<{ user: any }> = ({ user }) => {
 
     if (isLoading) return <div className="p-8"><LoadingIndicator message="Loading CGPA Data..." /></div>
 
-    if(!user) return (
-        <div className="text-center p-8 bg-slate-900/50 rounded-xl holo-card">
-            <p className="text-slate-300 mb-4 text-lg">Please log in to save and view your CGPA history.</p>
-        </div>
-    )
+    const isUserAuthenticated = !!localStorage.getItem('authToken');
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div className="space-y-6">
+            {!isUserAuthenticated && (
+                <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4">
+                    <p className="text-blue-300 text-sm">
+                        <strong>Note:</strong> You're using the calculator in guest mode. Your data is saved locally on this device. 
+                        <span className="block mt-1">Log in to sync your data across devices and access additional features.</span>
+                    </p>
+                </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
              <div className="holo-card p-6 space-y-4">
                 <h3 className="text-xl font-bold text-cyan-300">Enter Semester Details</h3>
                 <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
@@ -318,8 +317,6 @@ const CgpaCalculator: FC<{ user: any }> = ({ user }) => {
 
 const CgpaPage: FC = () => {
     const [mode, setMode] = useState<'cgpa' | 'sgpa'>('cgpa');
-    const { user } = useAuth();
-    const navigate = useNavigate();
 
     useEffect(() => {
         document.body.classList.add('futuristic-theme');
@@ -360,7 +357,7 @@ const CgpaPage: FC = () => {
             </div>
             
             <div className="animate-fade-in">
-              {mode === 'cgpa' ? <CgpaCalculator user={user} /> : <SgpaCalculator />}
+              {mode === 'cgpa' ? <CgpaCalculator /> : <SgpaCalculator />}
             </div>
         </div>
     );

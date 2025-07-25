@@ -89,7 +89,7 @@ const EventsPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const shareText = `Hey! Check out MNIT LIVE, the one-stop platform for MNIT students to exchange rooms, find events, and connect. Join the community here: ${window.location.href}`;
+    const shareText = `Hey! Check out Hostel Dalali, the one-stop platform for MNIT students to exchange rooms, find events, and connect. Join the community here: ${window.location.href}`;
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 
     useEffect(() => {
@@ -139,7 +139,7 @@ const EventsPage: React.FC = () => {
                         Features Currently in Development
                     </h1>
                     <p className="mt-4 text-lg text-slate-400 max-w-2xl mx-auto">
-                        Suggest <span className="font-bold text-cyan-400">MNIT LIVE</span> to your friends for faster availability of this feature.
+                        Suggest <span className="font-bold text-cyan-400">Hostel Dalali</span> to your friends for faster availability of this feature.
                     </p>
                 </div>
 
@@ -168,7 +168,7 @@ const EventsPage: React.FC = () => {
                        Help Us Grow!
                     </h2>
                     <p className="mt-3 text-md text-slate-300">
-                        Love MNIT LIVE? Spread the word and help the community connect.
+                        Love Hostel Dalali? Spread the word and help the community connect.
                     </p>
                     <div className="mt-6 flex flex-col sm:flex-row gap-4">
                         <a 

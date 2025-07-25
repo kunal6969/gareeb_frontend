@@ -253,10 +253,10 @@ const DashboardPage: React.FC = () => {
             <div className="holo-card flex flex-col sm:flex-row justify-between items-start gap-4 p-6">
                 <div>
                     <h1 className="text-3xl font-bold text-white">
-                        {user ? `Welcome back, ${user.fullName.split(' ')[0]}!` : "Welcome to MNIT LIVE!"} 
+                        {user ? `Welcome back, ${user.fullName.split(' ')[0]}!` : "Welcome to Hostel Dalali!"} 
                     </h1>
                     <p className="futuristic-text-secondary mt-1">
-                        {user ? "This is your personal dashboard." : "The unofficial platform for hostel room exchange at MNIT."}
+                        {user ? "This is your personal dashboard." : "The official platform for hostel room exchange at MNIT."}
                     </p>
                 </div>
             </div>

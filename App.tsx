@@ -1,15 +1,30 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { HashRouter, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import { AuthContextProvider, useAuth } from './contexts/AuthContext';
+import { ThemeContextProvider, useTheme } from './contexts/ThemeContext';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import HostelRoomsPage from './pages/HostelRoomsPage'; 
 import EventsPage from './pages/EventsPage';
+import AttendanceTrackerPage from './pages/AttendanceTrackerPage';
 import CgpaPage from './pages/CgpaPage';
 import { Spinner, Button } from './components/UIElements'; 
 import { 
-    Gradients, HomeIcon, LogoutIcon, LoginIcon, BuildingIcon, CalendarDaysIcon, ChartPieIcon, XMarkIcon, MenuIcon as VibrantMenuIcon
+    Gradients, SunIcon, MoonIcon, HomeIcon, LogoutIcon, LoginIcon, BuildingIcon, CalendarDaysIcon, CheckBadgeIcon, ChartPieIcon, XMarkIcon, MenuIcon as VibrantMenuIcon
 } from './components/VibrantIcons';
+
+const ThemeToggle: React.FC = () => {
+    const { theme, toggleTheme } = useTheme();
+    return (
+        <button
+            onClick={toggleTheme} 
+            className="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-200" 
+            aria-label="Toggle theme" 
+        >
+            {theme === 'light' ? <MoonIcon className="w-7 h-7" /> : <SunIcon className="w-7 h-7" />}
+        </button>
+    );
+};
 
 const Navbar: React.FC = () => {
   const { user, logout, loading } = useAuth();
@@ -24,6 +39,7 @@ const Navbar: React.FC = () => {
     { path: '/dashboard', label: 'Dashboard', icon: <HomeIcon /> },
     { path: '/hostel-rooms', label: 'Hostel Rooms', icon: <BuildingIcon /> },
     { path: '/events', label: 'Events', icon: <CalendarDaysIcon /> },
+    { path: '/attendance-tracker', label: 'Attendance', icon: <CheckBadgeIcon /> },
     { path: '/cgpa-calculator', label: 'CGPA', icon: <ChartPieIcon /> },
   ];
 
@@ -97,7 +113,7 @@ const Navbar: React.FC = () => {
       <nav className={`bg-slate-100/80 dark:bg-gray-950/80 backdrop-blur-xl shadow-lg fixed top-0 left-0 right-0 z-30 border-b border-slate-200/50 dark:border-slate-800/50 transition-transform duration-300 ease-in-out ${isNavbarVisible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/dashboard" className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-300 transform hover:scale-105">
-            MNIT LIVE
+            Hostel Dalali
           </Link>
           
           {/* Desktop Nav */}
@@ -129,10 +145,12 @@ const Navbar: React.FC = () => {
                       <LogoutIcon />
                   </Button>
                )}
+               <ThemeToggle />
             </div>
 
             {/* Mobile controls */}
             <div className="flex items-center gap-x-1 md:hidden">
+              <ThemeToggle />
               {user && (
                 <Button onClick={logout} variant="ghost" size="sm" className="!p-2" title="Logout">
                   <LogoutIcon className="h-7 w-7" />
@@ -187,6 +205,7 @@ const AppBody: React.FC = () => {
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/hostel-rooms" element={<HostelRoomsPage />} />
                     <Route path="/events" element={<EventsPage />} />
+                    <Route path="/attendance-tracker" element={<AttendanceTrackerPage />} />
                     <Route path="/cgpa-calculator" element={<CgpaPage />} />
                     <Route path="/" element={<Navigate to="/dashboard" replace />} />
                     <Route path="*" element={<Navigate to="/" />} /> 
@@ -199,12 +218,14 @@ const AppBody: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <AuthContextProvider>
-      <Gradients />
-      <HashRouter>
-        <AppBody />
-      </HashRouter>
-    </AuthContextProvider>
+    <ThemeContextProvider>
+        <AuthContextProvider>
+        <Gradients />
+        <HashRouter>
+            <AppBody />
+        </HashRouter>
+        </AuthContextProvider>
+    </ThemeContextProvider>
   );
 };
 
@@ -212,10 +233,10 @@ const Footer: React.FC = () => {
     return (
         <footer className="bg-transparent text-slate-500 dark:text-slate-400 py-6 mt-12">
             <div className="container mx-auto text-center">
-                <p>&copy; {new Date().getFullYear()} MNIT LIVE. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} Hostel Dalali. All rights reserved.</p>
                 <p className="text-sm mt-1">A platform for MNIT Jaipur students. 🎓</p>
                 <p className="text-sm mt-2">
-                    <a href="mailto:hostel.admin@mnit.ac.in?subject=MNIT LIVE Query" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 underline transition-colors duration-200">Contact Admin</a>
+                    <a href="mailto:hostel.admin@mnit.ac.in?subject=Hostel Dalali Query" className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 underline transition-colors duration-200">Contact Admin</a>
                 </p>
             </div>
         </footer>

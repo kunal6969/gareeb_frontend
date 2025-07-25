@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button, Input, Alert, Select, AtSymbolIcon, LockClosedIcon, UserCircleIcon } from '../components/UIElements';
 import { KeyIcon, RocketIcon, CheckmarkIcon, PencilIcon, WhatsAppIcon } from '../components/VibrantIcons';
 import { User } from '../types';
-import { sendOtp, verifyOtpAndRegister } from '@/services/tempEmailService';
+import { sendOtp, verifyOtpAndRegister } from '../services/tempEmailService';
 
 const LoginPage: React.FC = () => {
   const [mode, setMode] = useState<'initial' | 'login' | 'signup'>('initial');
@@ -360,7 +360,8 @@ const LoginPage: React.FC = () => {
         return (
           <>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900 dark:text-white">
-              Welcome to MNIT LIVE
+              Welcome to
+              Hostel Dalali
             </h2>
             <p className="mt-2 text-center text-sm text-slate-700 dark:text-slate-300">
               Your one-stop platform for hostel room exchange at MNIT.

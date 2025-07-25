@@ -242,7 +242,7 @@ The frontend is now 100% compatible with your backend implementation. All new fe
 
 **Required Email Format** (Plain Text Only):
 ```
-Subject: OTP Verification - MNIT LIVE
+Subject: OTP Verification - Hostel Dalali
 
 Dear User,
 
@@ -253,7 +253,7 @@ This OTP is valid for 10 minutes.
 Please do not share this OTP with anyone.
 
 Best regards,
-MNIT LIVE Team
+Hostel Dalali Team
 ```
 
 ### 1.2 OTP Storage and Verification
