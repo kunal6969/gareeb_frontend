@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo, FC } from 'react';
-import { CgpaData, Semester } from '../types';
+import { useState, useEffect, useMemo, FC } from 'react';
+import { CgpaData } from '../types';
 import * as cgpaService from '../services/cgpaService';
 import { Button, Input, Select } from '../components/UIElements';
 import { TrashIcon, PlusIcon, ChartPieIcon, SparkleIcon } from '../components/VibrantIcons';
@@ -121,7 +121,6 @@ const SgpaCalculator: FC = () => {
                                         placeholder="Select your grade"
                                         className={sub.error === 'grade' ? 'animate-shake' : ''}
                                         error={sub.error === 'grade' ? 'Please select a valid grade' : undefined}
-                                        isGradeSelect={true}
                                     />
                                 </div>
                                 
@@ -311,9 +310,10 @@ const CgpaCalculator: FC = () => {
                     </div>
                 </div>
             </div>
+            </div>
         </div>
-    )
-}
+    );
+};
 
 const CgpaPage: FC = () => {
     const [mode, setMode] = useState<'cgpa' | 'sgpa'>('cgpa');
