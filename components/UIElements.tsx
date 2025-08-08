@@ -1,4 +1,3 @@
-
 import React, { ReactNode, useState, useRef, useEffect } from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -132,7 +131,7 @@ export const Select: React.FC<SelectProps> = ({ label, id, error, options, value
         <button
           type="button"
           id={id}
-          className={`relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm ${error ? 'border-red-500' : ''} ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''} ${buttonClassName}`}
+          className={`relative w-full cursor-default rounded-lg bg-white dark:bg-[#0b1220] ring-1 ring-slate-200/80 dark:ring-white/10 py-2.5 pl-3 pr-10 text-left focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-white/20 sm:text-sm ${error ? '!ring-red-500' : ''} ${disabled ? 'bg-slate-50 dark:bg-white/5 cursor-not-allowed opacity-70' : 'hover:bg-slate-50 dark:hover:bg-white/5'} ${buttonClassName}`}
           onClick={() => !disabled && setIsOpen(!isOpen)}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
@@ -141,28 +140,21 @@ export const Select: React.FC<SelectProps> = ({ label, id, error, options, value
            {icon && <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">{icon}</span>}
           <span className={`block truncate ${icon ? 'ml-6' : ''}`}>{selectedLabel}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-            <svg className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <svg className={`h-5 w-5 text-slate-400 dark:text-slate-500 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fillRule="evenodd" d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 6.53 8.28a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.53a.75.75 0 011.06 0L10 15.19l3.5-3.5a.75.75 0 111.06 1.06l-4 4a.75.75 0 01-1.06 0l-4-4a.75.75 0 010-1.06z" clipRule="evenodd" />
             </svg>
           </span>
         </button>
 
         {isOpen && !disabled && (
-          <div className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          <div className="absolute z-10 mt-1 w-full max-h-60 overflow-auto rounded-lg bg-white dark:bg-[#0b1220] py-1 text-base shadow-xl ring-1 ring-slate-200/80 dark:ring-white/10 focus:outline-none sm:text-sm">
             {placeholder && !options.some(opt => opt.value === '') && (
-              <div
-                onClick={() => handleSelect('')}
-                className="text-gray-400 relative cursor-default select-none py-2 pl-3 pr-9"
-              >
+              <div onClick={() => handleSelect('')} className="text-slate-400 relative cursor-pointer select-none py-2 pl-3 pr-9 hover:bg-slate-50 dark:hover:bg-white/5">
                 {placeholder}
               </div>
             )}
             {options.map((option) => (
-              <div
-                key={option.value}
-                onClick={() => handleSelect(option.value)}
-                className={`relative cursor-default select-none py-2 pl-3 pr-9 ${value === option.value ? 'text-white bg-indigo-600' : 'text-gray-900'}`}
-              >
+              <div key={option.value} onClick={() => handleSelect(option.value)} className={`relative cursor-pointer select-none py-2 pl-3 pr-9 rounded-md ${value === option.value ? 'bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-slate-100' : 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5'}`}>
                 <span className="font-normal block truncate">{option.label}</span>
               </div>
             ))}

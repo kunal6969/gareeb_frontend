@@ -5,7 +5,6 @@ const AboutPage: FC = () => {
   return (
     <div className="min-h-[calc(100vh-200px)]">
       <div className="max-w-5xl mx-auto px-4">
-        <div className="w-full h-20 rounded-2xl mb-10 subtle-shadow bg-white/60 dark:bg-white/10 ring-1 ring-slate-200/70 dark:ring-white/10" />
         <div className="grid md:grid-cols-2 gap-10 items-center">
           {/* Clean photo card */}
           <div className="relative mx-auto">
