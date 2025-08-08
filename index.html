@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.svg" />
+  <!-- Favicon set dynamically via canvas (no static image) -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0891b2" />
     <meta
       name="description"
       content="MNIT LIVE - Your ultimate CGPA tracker and academic helper for MNIT students"
     />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+  <link rel="apple-touch-icon" id="apple-touch-dynamic" href="" />
     <link rel="manifest" href="/manifest.json" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -70,6 +70,64 @@
       }
     </script>
     <title>MNIT LIVE - CGPA Calculator</title>
+    <script>
+      // Dynamically generate a premium gradient-text favicon and apple-touch icon
+      (function makeFavicon(){
+        try {
+          const size = 128; // sharper
+          const canvas = document.createElement('canvas');
+          canvas.width = size; canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return;
+          // Background glow
+          const bg = ctx.createRadialGradient(size*0.5, size*0.4, 8, size*0.5, size*0.6, size*0.6);
+          bg.addColorStop(0, 'rgba(15,23,42,0.95)');
+          bg.addColorStop(1, 'rgba(2,6,23,1)');
+          ctx.fillStyle = bg; ctx.fillRect(0,0,size,size);
+
+          // Metallic/glass gradient text
+          const grad = ctx.createLinearGradient(0,0,size,size);
+          grad.addColorStop(0.0, '#4338CA'); // deep indigo
+          grad.addColorStop(0.33, '#2563EB'); // royal blue
+          grad.addColorStop(0.66, '#06B6D4'); // cyan
+          grad.addColorStop(1.0, '#8B5CF6'); // violet
+
+          // Embossed/extrude effect: draw shadow text offset
+          ctx.font = '900 70px Inter, Segoe UI, Arial';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const text = 'MNIT';
+          // soft shadow layers for depth
+          for (let i=6;i>=1;i--) {
+            ctx.fillStyle = `rgba(0,0,0,${0.06 + i*0.02})`;
+            ctx.fillText(text, size*0.5 + i, size*0.55 + i);
+          }
+          // main gradient text
+          ctx.fillStyle = grad;
+          ctx.fillText(text, size*0.5, size*0.55);
+
+          // Gloss highlight
+          const gloss = ctx.createLinearGradient(0, 0, 0, size);
+          gloss.addColorStop(0, 'rgba(255,255,255,0.28)');
+          gloss.addColorStop(0.4, 'rgba(255,255,255,0.06)');
+          gloss.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.fillStyle = gloss;
+          ctx.beginPath();
+          ctx.roundRect(6, 6, size-12, size*0.45, 12);
+          ctx.fill();
+
+          const dataUrl = canvas.toDataURL('image/png');
+          const link = document.querySelector("link[rel='icon']") || document.createElement('link');
+          link.setAttribute('rel', 'icon');
+          link.setAttribute('type', 'image/png');
+          link.setAttribute('href', dataUrl);
+          document.head.appendChild(link);
+
+          const apple = document.getElementById('apple-touch-dynamic');
+          if (apple) apple.setAttribute('href', dataUrl);
+        } catch (e) { /* ignore */ }
+      })();
+    </script>
   <script type="importmap">
 {
   "imports": {

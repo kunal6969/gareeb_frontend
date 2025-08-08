@@ -6,6 +6,23 @@ import { Button, Input, Select } from '../components/UIElements';
 import { TrashIcon, PlusIcon, ChartPieIcon, SparkleIcon } from '../components/VibrantIcons';
 import LoadingIndicator from '../components/LoadingIndicator';
 
+// Animated number hook
+const useAnimatedNumber = (value: number, fractionDigits = 2) => {
+  const [display, setDisplay] = useState(value);
+  useEffect(() => {
+    const start = display; const end = value; const duration = 400; const startTs = performance.now();
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - startTs) / duration);
+      setDisplay(start + (end - start) * (1 - Math.cos(p * Math.PI)) / 2);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+  return display.toFixed(fractionDigits);
+};
+
 // --- Sub-components for the Futuristic UI ---
 const SgpaCalculator: FC = () => {
     const [subjects, setSubjects] = useState<Subject[]>([{ id: `sub-${Date.now()}`, grade: '', credits: '', error: null }]);
@@ -62,6 +79,7 @@ const SgpaCalculator: FC = () => {
     }, [subjects]);
     
     const { sgpa: calculatedSgpa, totalCredits, totalGradePoints } = sgpaCalculation;
+    const animatedSgpa = useAnimatedNumber(parseFloat(calculatedSgpa || '0') || 0, 2);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -142,7 +160,7 @@ const SgpaCalculator: FC = () => {
                 
                 <div className="mb-6">
                     <p className="text-8xl font-mono font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 mb-2" style={{ textShadow: '0 0 30px #00ffff99' }}>
-                        {calculatedSgpa}
+                        {animatedSgpa}
                     </p>
                     <div className="text-slate-400 space-y-1">
                         <p className="text-sm">Total Credits: <span className="text-cyan-300 font-semibold">{totalCredits}</span></p>

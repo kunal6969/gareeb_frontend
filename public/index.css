@@ -16,3 +16,46 @@ html, body, #root { height: 100%; }
 @keyframes slide-down-glow { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
 .animate-slide-down-glow { animation: slide-down-glow .25s ease-out both; }
 @keyframes pulse-grid { 0% { opacity: .3 } 50% { opacity: .6 } 100% { opacity: .3 } }
+
+/* Premium gradient text logo with subtle shimmer */
+.brand-logo {
+	background: linear-gradient(90deg,#4338CA,#2563EB,#06B6D4,#8B5CF6);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	position: relative;
+	text-shadow: 0 8px 20px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.08);
+}
+.brand-logo::after {
+	content: "";
+	position: absolute; inset: 0; border-radius: .4rem;
+	background: linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent);
+	transform: translateX(-120%);
+	animation: shimmer 5s ease-in-out infinite;
+}
+@keyframes shimmer { 0%{transform: translateX(-120%)} 8%{transform: translateX(120%)} 100%{transform: translateX(120%)} }
+
+/* 3D tilt utility */
+.tilt {
+	transform-style: preserve-3d;
+	transition: transform .25s ease, box-shadow .25s ease;
+}
+.tilt:hover { transform: perspective(900px) rotateX(6deg) rotateY(-6deg) translateZ(2px); }
+
+/* Parallax container */
+.parallax { perspective: 1200px; transform-style: preserve-3d; }
+.parallax-layer { position: absolute; inset: -20vh -10vw; will-change: transform; }
+
+/* Button ripple */
+.ripple { position: relative; overflow: hidden; }
+.ripple:after { content: ""; position: absolute; border-radius: 50%; inset: 0; background: radial-gradient(circle, rgba(255,255,255,.35) 10%, transparent 11%); transform: scale(10); opacity: 0; transition: transform .6s, opacity .8s; }
+.ripple:active:after { transform: scale(0); opacity: .6; transition: 0s; }
+
+/* Animated underline */
+.u-underline { position: relative; }
+.u-underline:after { content:""; position:absolute; left:0; bottom:-2px; height:2px; width:0; background: linear-gradient(90deg,#4338CA,#06B6D4,#8B5CF6); transition: width .25s ease; }
+.u-underline:hover:after, .u-underline[aria-current="page"]:after { width:100%; }
+
+/* Section reveals */
+@keyframes fade-up { from{opacity:0; transform: translateY(12px);} to{opacity:1; transform:none;} }
+.reveal { animation: fade-up .6s ease both; }
