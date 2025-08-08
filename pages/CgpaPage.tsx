@@ -1,29 +1,10 @@
 import { useState, useEffect, useMemo, FC } from 'react';
-import { CgpaData } from '../types';
+import { CgpaData, Subject } from '../types';
 import * as cgpaService from '../services/cgpaService';
+import { GRADE_OPTIONS } from '../constants';
 import { Button, Input, Select } from '../components/UIElements';
 import { TrashIcon, PlusIcon, ChartPieIcon, SparkleIcon } from '../components/VibrantIcons';
 import LoadingIndicator from '../components/LoadingIndicator';
-
-// --- Helper Types ---
-interface Subject {
-    id: string;
-    grade: string;
-    credits: string;
-    error?: 'grade' | 'credits' | null;
-}
-
-const GRADE_OPTIONS = [
-    { value: '10', label: 'AA - 10' },
-    { value: '9', label: 'AB - 9' },
-    { value: '8', label: 'BB - 8' },
-    { value: '7', label: 'BC - 7' },
-    { value: '6', label: 'CC - 6' },
-    { value: '5', label: 'CD - 5' },
-    { value: '4', label: 'DD - 4' },
-    { value: '0', label: 'FA - 0' },
-    { value: '0', label: 'FP - 0' },
-];
 
 // --- Sub-components for the Futuristic UI ---
 const SgpaCalculator: FC = () => {
