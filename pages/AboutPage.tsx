@@ -22,7 +22,7 @@ const AboutPage: FC = () => {
           <div className="space-y-5">
             <h1 className="text-4xl md:text-5xl font-extrabold">About Me</h1>
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              Hi, I’m <span className="font-semibold text-cyan-600 dark:text-cyan-400">Kunal Thapliyal</span> — a creator, tech enthusiast, and MNIT student dedicated to making tools that simplify student life. MNIT LIVE is designed for speed, accuracy, and style. Let’s connect!
+              Hi, I’m <span className="font-semibold text-cyan-600 dark:text-cyan-400">Kunal Thapliyal</span> — a creator, tech enthusiast, and MNIT student dedicated to making tools that simplify student life. MNIT LIVE is designed for you to finally able to calculate your cgpas accurately and efficiently. I hope you find it useful!
             </p>
 
             {/* Simple social buttons */}
