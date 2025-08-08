@@ -1,0 +1,18 @@
+/* Minimal global styles for MNIT LIVE */
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+
+/* Futuristic helpers referenced by components */
+.futuristic-title { text-shadow: 0 0 12px rgba(34,211,238,0.35); }
+.holo-card { background: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.4)); border: 1px solid rgba(148,163,184,0.15); border-radius: 0.75rem; }
+.hologram-panel { position: relative; background: radial-gradient(120% 120% at 50% 0%, rgba(56,189,248,0.08), rgba(168,85,247,0.06) 45%, transparent 70%); border: 1px solid rgba(148,163,184,0.15); border-radius: 0.75rem; padding: 1.5rem; overflow: hidden; }
+.hologram-overlay { position: absolute; inset: 0; display: grid; place-items: center; backdrop-filter: blur(6px) saturate(1.2); background: linear-gradient(180deg, rgba(236,72,153,0.08), rgba(56,189,248,0.05)); }
+.content-blur { filter: blur(2px) opacity(0.5); }
+.custom-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(14,165,233,.5) transparent; }
+.custom-scrollbar::-webkit-scrollbar { width: 8px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#22d3ee,#3b82f6); border-radius: 9999px; }
+
+@keyframes slide-down-glow { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+.animate-slide-down-glow { animation: slide-down-glow .25s ease-out both; }
+@keyframes pulse-grid { 0% { opacity: .3 } 50% { opacity: .6 } 100% { opacity: .3 } }
