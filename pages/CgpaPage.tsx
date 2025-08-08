@@ -3,12 +3,15 @@ import { CgpaData, Subject } from '../types';
 import * as cgpaService from '../services/cgpaService';
 import { GRADE_OPTIONS } from '../constants';
 import { Button, Input, Select } from '../components/UIElements';
-import { TrashIcon, PlusIcon, ChartPieIcon } from '../components/VibrantIcons';
+import { TrashIcon, PlusIcon } from '../components/VibrantIcons';
+import { MinimalCalculatorIcon } from '../components/VibrantIcons';
+import { getUsageCount, incrementOncePerSession } from '../services/usageService';
 import LoadingIndicator from '../components/LoadingIndicator';
 
 // --- Sub-components for the Futuristic UI ---
 const SgpaCalculator: FC = () => {
     const [subjects, setSubjects] = useState<Subject[]>([{ id: `sub-${Date.now()}`, grade: '', credits: '', error: null }]);
+    const [hasIncremented, setHasIncremented] = useState(false);
 
     const handleSubjectChange = (id: string, field: 'grade' | 'credits', value: string) => {
         if (field === 'credits' && !/^\d*\.?\d*$/.test(value)) return;
@@ -62,6 +65,16 @@ const SgpaCalculator: FC = () => {
     }, [subjects]);
     
     const { sgpa: calculatedSgpa, totalCredits, totalGradePoints } = sgpaCalculation;
+
+    // Increment global usage once per session when a valid SGPA is computed (> 0)
+    useEffect(() => {
+        if (!hasIncremented) {
+            const sgpaVal = parseFloat(calculatedSgpa);
+            if (!isNaN(sgpaVal) && sgpaVal > 0) {
+                incrementOncePerSession().finally(() => setHasIncremented(true));
+            }
+        }
+    }, [calculatedSgpa, hasIncremented]);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -140,9 +153,7 @@ const SgpaCalculator: FC = () => {
                 </div>
                 
                 <div className="mb-6">
-                    <p className="text-7xl font-mono font-extrabold mb-2">
-                        {calculatedSgpa}
-                    </p>
+                    <p className="text-7xl font-mono font-extrabold mb-2 platinum-neon">{calculatedSgpa}</p>
                     <div className="text-slate-500 dark:text-slate-400 space-y-1">
                         <p className="text-sm">Total Credits: <span className="font-semibold text-slate-700 dark:text-slate-200">{totalCredits}</span></p>
                         <p className="text-sm">Grade Points: <span className="font-semibold text-slate-700 dark:text-slate-200">{totalGradePoints.toFixed(2)}</span></p>
@@ -165,6 +176,7 @@ const CgpaCalculator: FC = () => {
     const [cgpaData, setCgpaData] = useState<CgpaData>({ semesters: [] });
     const [isLoading, setIsLoading] = useState(true);
     const [prediction, setPrediction] = useState({ futureSgpa: '', futureCredits: '' });
+    const [hasIncremented, setHasIncremented] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -217,6 +229,13 @@ const CgpaCalculator: FC = () => {
             totalCredits,
         };
     }, [cgpaData]);
+
+    // Increment global usage once per session when a valid CGPA is computable (> 0)
+    useEffect(() => {
+        if (!hasIncremented && isCalculable && currentCgpa > 0) {
+            incrementOncePerSession().finally(() => setHasIncremented(true));
+        }
+    }, [isCalculable, currentCgpa, hasIncremented]);
 
      const predictedCgpa = useMemo(() => {
         const futureSgpa = parseFloat(prediction.futureSgpa);
@@ -295,10 +314,13 @@ const CgpaPage: FC = () => {
         <div className="relative min-h-[calc(100vh-250px)]">
             <div className="text-center mb-6">
                 <h1 className="text-4xl font-extrabold tracking-tight flex items-center justify-center gap-3">
-                    <ChartPieIcon className="w-8 h-8" /> CGPA / SGPA Calculator
+                    <MinimalCalculatorIcon className="w-8 h-8 text-slate-800 dark:text-slate-200" /> CGPA / SGPA Calculator
                 </h1>
                 <p className="text-slate-500 dark:text-slate-400 mt-1">Find your CGPA in real time</p>
             </div>
+
+            {/* Global usage display */}
+            <UsageBanner />
 
             <div className="flex justify-center mb-8 p-1 rounded-full bg-slate-100 dark:bg-white/5 ring-1 ring-slate-200/80 dark:ring-white/10 max-w-sm mx-auto">
                 <button
@@ -321,4 +343,33 @@ const CgpaPage: FC = () => {
 };
 
 export default CgpaPage;
+
+// Banner to show global usage count in a big platinum-neon number
+const UsageBanner: FC = () => {
+    const [count, setCount] = useState<number | null>(null);
+
+    useEffect(() => {
+        let mounted = true;
+        getUsageCount().then(v => { if (mounted) setCount(v); });
+        const onInc = (e: Event) => {
+            const ce = e as CustomEvent<{ value: number }>;
+            if (typeof ce.detail?.value === 'number') setCount(ce.detail.value);
+        };
+        window.addEventListener('mnitlive:usage-incremented', onInc);
+        return () => { mounted = false; window.removeEventListener('mnitlive:usage-incremented', onInc); };
+    }, []);
+
+    return (
+        <div className="mb-8 flex items-center justify-center">
+            <div className="holo-card w-full max-w-3xl p-6 text-center">
+                <p className="text-sm text-slate-500 dark:text-slate-400">Times MNIT LIVE has been used to find CGPA/SGPA</p>
+                <div className="mt-2">
+                    <span className="platinum-neon font-extrabold tracking-tight" style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', lineHeight: 1 }}>
+                        {count !== null ? count.toLocaleString() : '—'}
+                    </span>
+                </div>
+            </div>
+        </div>
+    );
+};
 

@@ -204,3 +204,35 @@ export const UserCircleMono: React.FC<{ className?: string }> = ({ className }) 
     <path d="M17 18c0-2.761-2.239-5-5-5s-5 2.239-5 5" />
   </svg>
 );
+
+// Minimal, monochrome calculator icon (theme-friendly)
+export const MinimalCalculatorIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.5}
+    className={className || ''}
+  >
+    <rect x="4.5" y="3.75" width="15" height="16.5" rx="2.25" />
+    <rect x="7.5" y="6.75" width="9" height="3" rx="0.75" />
+    <path d="M8.25 12h.01M11.25 12h.01M14.25 12h.01M8.25 15h.01M11.25 15h.01M14.25 15h.01M8.25 18h.01M11.25 18h.01M14.25 18h.01" />
+  </svg>
+);
+
+// Minimal gauge/needle icon (for SGPA/CGPA context)
+export const MinimalGaugeIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.5}
+    className={className || ''}
+  >
+    <path d="M12 20.25a8.25 8.25 0 1 1 7.582-5.07" />
+    <path d="M12 12l5.25 3.75" />
+    <circle cx="12" cy="12" r="1.25" />
+  </svg>
+);
