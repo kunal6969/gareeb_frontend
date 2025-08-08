@@ -18,33 +18,33 @@ html, body, #root { height: 100%; }
 @keyframes pulse-grid { 0% { opacity: .3 } 50% { opacity: .6 } 100% { opacity: .3 } }
 
 /* Premium gradient text logo with subtle shimmer */
-.brand-logo {
-	background: linear-gradient(90deg,#4338CA,#2563EB,#06B6D4,#8B5CF6);
+.brand-logo, .brand-logo-platinum {
+	background: linear-gradient(90deg,#e5e7eb,#cfcfcf,#bfbfbf,#f3f4f6);
 	-webkit-background-clip: text;
 	background-clip: text;
 	color: transparent;
 	position: relative;
-	text-shadow: 0 8px 20px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.08);
+	text-shadow: 0 10px 30px rgba(0,0,0,.28), 0 1px 0 rgba(255,255,255,.06), 0 0 0.5px rgba(255,255,255,.2);
 }
-.brand-logo::after {
+.brand-logo::after, .brand-logo-platinum::after {
 	content: "";
 	position: absolute; inset: 0; border-radius: .4rem;
-	background: linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent);
+	background: linear-gradient(120deg, transparent, rgba(255,255,255,.25), transparent);
 	transform: translateX(-120%);
-	animation: shimmer 5s ease-in-out infinite;
+	animation: shimmer 12s ease-in-out infinite;
 }
-@keyframes shimmer { 0%{transform: translateX(-120%)} 8%{transform: translateX(120%)} 100%{transform: translateX(120%)} }
+@keyframes shimmer { 0%{transform: translateX(-120%)} 4%{transform: translateX(120%)} 100%{transform: translateX(120%)} }
 
 /* 3D tilt utility */
 .tilt {
 	transform-style: preserve-3d;
 	transition: transform .25s ease, box-shadow .25s ease;
 }
-.tilt:hover { transform: perspective(900px) rotateX(6deg) rotateY(-6deg) translateZ(2px); }
+.tilt:hover { transform: perspective(900px) rotateX(3deg) rotateY(-3deg) translateZ(1px); }
 
 /* Parallax container */
 .parallax { perspective: 1200px; transform-style: preserve-3d; }
-.parallax-layer { position: absolute; inset: -20vh -10vw; will-change: transform; }
+.parallax-layer { position: absolute; inset: -20vh -10vw; will-change: transform; opacity: .35; }
 
 /* Button ripple */
 .ripple { position: relative; overflow: hidden; }
@@ -59,3 +59,5 @@ html, body, #root { height: 100%; }
 /* Section reveals */
 @keyframes fade-up { from{opacity:0; transform: translateY(12px);} to{opacity:1; transform:none;} }
 .reveal { animation: fade-up .6s ease both; }
+@keyframes fade-scale { from{opacity:0; transform: translateY(10px) scale(.98);} to{opacity:1; transform: none;} }
+.fade-scale { animation: fade-scale .5s ease both; }

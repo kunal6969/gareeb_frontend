@@ -71,7 +71,7 @@
     </script>
     <title>MNIT LIVE - CGPA Calculator</title>
     <script>
-      // Dynamically generate a premium gradient-text favicon and apple-touch icon
+    // Dynamically generate a premium platinum gradient-text favicon and apple-touch icon
       (function makeFavicon(){
         try {
           const size = 128; // sharper
@@ -85,12 +85,13 @@
           bg.addColorStop(1, 'rgba(2,6,23,1)');
           ctx.fillStyle = bg; ctx.fillRect(0,0,size,size);
 
-          // Metallic/glass gradient text
-          const grad = ctx.createLinearGradient(0,0,size,size);
-          grad.addColorStop(0.0, '#4338CA'); // deep indigo
-          grad.addColorStop(0.33, '#2563EB'); // royal blue
-          grad.addColorStop(0.66, '#06B6D4'); // cyan
-          grad.addColorStop(1.0, '#8B5CF6'); // violet
+      // Platinum metallic gradient text
+      const grad = ctx.createLinearGradient(0,0,size,size);
+      grad.addColorStop(0.00, '#f5f5f5'); // near-white
+      grad.addColorStop(0.25, '#e5e7eb'); // slate-200
+      grad.addColorStop(0.50, '#d1d5db'); // gray-300
+      grad.addColorStop(0.75, '#bfc2c7'); // cool gray metallic
+      grad.addColorStop(1.00, '#f3f4f6'); // slate-100
 
           // Embossed/extrude effect: draw shadow text offset
           ctx.font = '900 70px Inter, Segoe UI, Arial';
@@ -106,10 +107,10 @@
           ctx.fillStyle = grad;
           ctx.fillText(text, size*0.5, size*0.55);
 
-          // Gloss highlight
+          // Subtle gloss highlight
           const gloss = ctx.createLinearGradient(0, 0, 0, size);
-          gloss.addColorStop(0, 'rgba(255,255,255,0.28)');
-          gloss.addColorStop(0.4, 'rgba(255,255,255,0.06)');
+          gloss.addColorStop(0, 'rgba(255,255,255,0.18)');
+          gloss.addColorStop(0.4, 'rgba(255,255,255,0.05)');
           gloss.addColorStop(1, 'rgba(255,255,255,0)');
           ctx.fillStyle = gloss;
           ctx.beginPath();

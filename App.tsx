@@ -50,7 +50,7 @@ const App: React.FC = () => {
           <div className="flex h-14 items-center justify-between">
             <NavLink to="/" className="flex items-center gap-2 font-extrabold tracking-tight">
               <span className="sr-only">MNIT LIVE</span>
-              <span className="brand-logo text-xl md:text-2xl">MNIT LIVE</span>
+              <span className="brand-logo-platinum text-xl md:text-2xl">MNIT LIVE</span>
             </NavLink>
 
             <nav className="hidden md:flex items-center gap-2">

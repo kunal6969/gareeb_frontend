@@ -18,7 +18,6 @@ const AboutPage: FC = () => {
                   className="w-full h-full object-cover opacity-95"
                   onError={(e) => { e.currentTarget.style.display = 'none'; }}
                 />
-                <div className="absolute inset-0 grid place-items-center text-white text-5xl font-black select-none">KT</div>
               </div>
             </div>
           </div>

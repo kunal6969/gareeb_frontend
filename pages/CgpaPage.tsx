@@ -326,24 +326,17 @@ const CgpaPage: FC = () => {
             {/* Background Grid */}
             <div className="absolute inset-[-5rem] bg-gray-950 -z-10" style={{
                 backgroundImage: `
-                    linear-gradient(to right, rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(0, 255, 255, 0.1) 1px, transparent 1px)`,
+                    linear-gradient(to right, rgba(0, 255, 255, 0.07) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0, 255, 255, 0.07) 1px, transparent 1px)`,
                 backgroundSize: '40px 40px',
-                animation: 'pulse-grid 10s linear infinite',
+                animation: 'pulse-grid 14s linear infinite',
             }}></div>
             
-            {/* Info banner */}
-            <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 mb-6">
-                <p className="text-blue-300 text-sm">
-                    <strong>Note:</strong> Your data is saved locally on this device. No sign-in required.
-                </p>
-            </div>
-            
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
                 <h1 className="text-4xl font-black tracking-tighter text-slate-100 flex items-center justify-center gap-3 futuristic-title">
                     <ChartPieIcon className="w-10 h-10" /> CGPA / SGPA Calculator
                 </h1>
-                <p className="text-cyan-400 font-mono mt-1">FIND YOUR CGPA IN REAL TIME</p>
+                <p className="text-cyan-300/80 font-mono mt-1 tracking-wide">Find your CGPA in real time</p>
             </div>
             
             <div className="flex justify-center mb-8 p-1 rounded-full bg-slate-900/50 border border-cyan-500/20 max-w-sm mx-auto">
