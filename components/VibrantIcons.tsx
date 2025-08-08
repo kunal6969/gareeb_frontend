@@ -188,3 +188,19 @@ export const MessageCircleIcon = withGlow(MessageCirclePath, '#00FFFF', 'grad-cy
 
 const RejectPath: React.FC = () => <path strokeLinecap="round" strokeLinejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />;
 export const RejectIcon = withGlow(RejectPath, '#FF69B4', 'grad-pink-red');
+
+// Minimal, monochrome user-circle icon (no glow, currentColor stroke)
+export const UserCircleMono: React.FC<{ className?: string }> = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.5}
+    className={className || ''}
+  >
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="9" r="3.25" />
+    <path d="M17 18c0-2.761-2.239-5-5-5s-5 2.239-5 5" />
+  </svg>
+);

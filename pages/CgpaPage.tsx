@@ -231,23 +231,23 @@ const CgpaCalculator: FC = () => {
     const isUserAuthenticated = !!localStorage.getItem('authToken');
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-8">
             {!isUserAuthenticated && (
-                <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4">
-                    <p className="text-blue-300 text-sm">
-                        <strong>Note:</strong> Your data is saved locally on this device. No sign-in required.
-                    </p>
-                </div>
-            )}
+                <div className="rounded-xl p-4 ring-1 ring-slate-200/80 dark:ring-white/10 bg-white dark:bg-[#0b1220]">
+                    <p className="text-slate-600 dark:text-slate-300 text-sm">
+                        <strong className="font-semibold text-slate-800 dark:text-slate-100">Note:</strong> Your data is saved locally on this device. No sign-in required.
+                     </p>
+                 </div>
+             )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
              <div className="holo-card p-6 space-y-4">
-                <h3 className="text-xl font-bold text-cyan-300">Enter Semester Details</h3>
+                <h3 className="text-xl font-semibold">Enter Semester Details</h3>
                 <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
                     {cgpaData.semesters.map((sem, index) => (
-                        <div key={sem.id} className="flex items-center gap-2 p-2 rounded-lg animate-slide-down-glow" style={{ animationDelay: `${index * 50}ms` }}>
-                            <span className="font-mono text-cyan-400">Sem {index + 1}:</span>
-                            <Input type="text" placeholder="SGPA" value={sem.sgpa} onChange={e => handleSemesterChange(sem.id, 'sgpa', e.target.value)} className="bg-slate-800 border-cyan-500/30 text-white !mt-0"/>
-                            <Input type="text" placeholder="Credits" value={sem.credits} onChange={e => handleSemesterChange(sem.id, 'credits', e.target.value)} className="bg-slate-800 border-cyan-500/30 text-white !mt-0"/>
+                        <div key={sem.id} className="flex items-center gap-2 p-2 rounded-lg">
+                            <span className="font-mono text-slate-600 dark:text-slate-300">Sem {index + 1}:</span>
+                            <Input type="text" placeholder="SGPA" value={sem.sgpa} onChange={e => handleSemesterChange(sem.id, 'sgpa', e.target.value)} className="!mt-0"/>
+                            <Input type="text" placeholder="Credits" value={sem.credits} onChange={e => handleSemesterChange(sem.id, 'credits', e.target.value)} className="!mt-0"/>
                             <Button variant="danger" size="sm" onClick={() => removeSemester(sem.id)} className="!p-2" disabled={cgpaData.semesters.length <= 1}>
                                 <TrashIcon className="w-4 h-4"/>
                             </Button>
@@ -258,70 +258,67 @@ const CgpaCalculator: FC = () => {
             </div>
             <div className="space-y-8">
                 <div className="hologram-panel">
-                    <div className={predictedCgpa !== null ? 'content-blur' : ''}>
-                        <h3 className="text-xl font-bold text-cyan-300 opacity-80">Current CGPA</h3>
-                        <p className="text-6xl font-mono font-black text-cyan-200 tracking-tighter" style={{ textShadow: '0 0 15px #00ffff99' }}>
-                            {isCalculable ? currentCgpa.toFixed(3) : '0.000'}
-                        </p>
-                        <p className="text-sm text-cyan-400 opacity-70">Over {totalCredits} credits</p>
-                    </div>
-
-                    {predictedCgpa !== null && (
-                         <div className="hologram-overlay">
-                            <h2 className="text-lg font-bold text-fuchsia-300 opacity-80">Projected CGPA</h2>
-                            <p className="text-5xl font-mono font-black text-fuchsia-200" style={{ textShadow: '0 0 15px #ff00ff99' }}>{predictedCgpa.toFixed(3)}</p>
-                         </div>
-                    )}
-                </div>
-                <div className="holo-card p-6">
-                     <h3 className="text-xl font-bold text-cyan-300 flex items-center gap-2"> Predict Next Semester</h3>
+                     <div className={predictedCgpa !== null ? 'content-blur' : ''}>
+                        <h3 className="text-xl font-semibold">Current CGPA</h3>
+                        <p className="text-6xl font-mono font-extrabold tracking-tight">
+                             {isCalculable ? currentCgpa.toFixed(3) : '0.000'}
+                         </p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">Over {totalCredits} credits</p>
+                     </div>
+ 
+                     {/* No overlay in minimal theme; show projection inline */}
+                     {predictedCgpa !== null && (
+                      <div className="mt-4 p-3 rounded-lg ring-1 ring-slate-200/80 dark:ring-white/10">
+                        <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300">Projected CGPA</h4>
+                        <p className="text-3xl font-mono font-bold">{predictedCgpa.toFixed(3)}</p>
+                      </div>
+                     )}
+                 </div>
+                 <div className="holo-card p-6">
+                     <h3 className="text-xl font-semibold flex items-center gap-2"> Predict Next Semester</h3>
                      <div className="flex items-center gap-2 mt-3">
-                        <Input type="text" placeholder="Future SGPA" value={prediction.futureSgpa} onChange={e => setPrediction({...prediction, futureSgpa: e.target.value})} className="bg-slate-800 border-cyan-500/30 text-white !mt-0"/>
-                        <Input type="text" placeholder="Future Credits" value={prediction.futureCredits} onChange={e => setPrediction({...prediction, futureCredits: e.target.value})} className="bg-slate-800 border-cyan-500/30 text-white !mt-0"/>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-    );
-};
-
-const CgpaPage: FC = () => {
-    const [mode, setMode] = useState<'cgpa' | 'sgpa'>('cgpa');
-
-    useEffect(() => { /* no theme class; keep defaults */ }, []);
-
-    return (
-        <div className="relative min-h-[calc(100vh-250px)]">
-             {/* Background grid removed for minimal look */}
-             
-             <div className="text-center mb-6">
-                <h1 className="text-4xl font-extrabold tracking-tight flex items-center justify-center gap-3">
-                    <ChartPieIcon className="w-8 h-8" /> CGPA / SGPA Calculator
-                </h1>
-                <p className="text-slate-500 dark:text-slate-400 mt-1">Find your CGPA in real time</p>
+                        <Input type="text" placeholder="Future SGPA" value={prediction.futureSgpa} onChange={e => setPrediction({...prediction, futureSgpa: e.target.value})} className="!mt-0"/>
+                        <Input type="text" placeholder="Future Credits" value={prediction.futureCredits} onChange={e => setPrediction({...prediction, futureCredits: e.target.value})} className="!mt-0"/>
+                     </div>
+                 </div>
              </div>
-             
-            <div className="flex justify-center mb-8 p-1 rounded-full bg-slate-100 dark:bg-white/5 ring-1 ring-slate-200/80 dark:ring-white/10 max-w-sm mx-auto">
-                 <button
-                     onClick={() => setMode('cgpa')}
-                     className={`px-6 py-2 rounded-full text-sm font-semibold w-1/2 ${mode === 'cgpa' ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-slate-100 ring-1 ring-slate-200/80 dark:ring-white/10' : 'text-slate-600 dark:text-slate-300'}`}
-                 >
-                     CGPA Calculator
-                 </button>
-                 <button
-                     onClick={() => setMode('sgpa')}
-                     className={`px-6 py-2 rounded-full text-sm font-semibold w-1/2 ${mode === 'sgpa' ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-slate-100 ring-1 ring-slate-200/80 dark:ring-white/10' : 'text-slate-600 dark:text-slate-300'}`}
-                 >
-                     SGPA Calculator
-                 </button>
-             </div>
-             
-             <div>
-               {mode === 'cgpa' ? <CgpaCalculator /> : <SgpaCalculator />}
              </div>
          </div>
      );
  }
  
+// Page wrapper with minimalist header and toggle
+const CgpaPage: FC = () => {
+    const [mode, setMode] = useState<'cgpa' | 'sgpa'>('cgpa');
+
+    return (
+        <div className="relative min-h-[calc(100vh-250px)]">
+            <div className="text-center mb-6">
+                <h1 className="text-4xl font-extrabold tracking-tight flex items-center justify-center gap-3">
+                    <ChartPieIcon className="w-8 h-8" /> CGPA / SGPA Calculator
+                </h1>
+                <p className="text-slate-500 dark:text-slate-400 mt-1">Find your CGPA in real time</p>
+            </div>
+
+            <div className="flex justify-center mb-8 p-1 rounded-full bg-slate-100 dark:bg-white/5 ring-1 ring-slate-200/80 dark:ring-white/10 max-w-sm mx-auto">
+                <button
+                    onClick={() => setMode('cgpa')}
+                    className={`px-6 py-2 rounded-full text-sm font-semibold w-1/2 ${mode === 'cgpa' ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-slate-100 ring-1 ring-slate-200/80 dark:ring-white/10' : 'text-slate-600 dark:text-slate-300'}`}
+                >
+                    CGPA Calculator
+                </button>
+                <button
+                    onClick={() => setMode('sgpa')}
+                    className={`px-6 py-2 rounded-full text-sm font-semibold w-1/2 ${mode === 'sgpa' ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-slate-100 ring-1 ring-slate-200/80 dark:ring-white/10' : 'text-slate-600 dark:text-slate-300'}`}
+                >
+                    SGPA Calculator
+                </button>
+            </div>
+
+            {mode === 'cgpa' ? <CgpaCalculator /> : <SgpaCalculator />}
+        </div>
+    );
+};
+
 export default CgpaPage;
+
