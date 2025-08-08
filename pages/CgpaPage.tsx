@@ -244,8 +244,7 @@ const CgpaCalculator: FC = () => {
             {!isUserAuthenticated && (
                 <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4">
                     <p className="text-blue-300 text-sm">
-                        <strong>Note:</strong> You're using the calculator in guest mode. Your data is saved locally on this device. 
-                        <span className="block mt-1">Log in to sync your data across devices and access additional features.</span>
+                        <strong>Note:</strong> Your data is saved locally on this device. No sign-in required.
                     </p>
                 </div>
             )}
@@ -314,6 +313,13 @@ const CgpaPage: FC = () => {
                 backgroundSize: '40px 40px',
                 animation: 'pulse-grid 10s linear infinite',
             }}></div>
+            
+            {/* Info banner */}
+            <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-4 mb-6">
+                <p className="text-blue-300 text-sm">
+                    <strong>Note:</strong> Your data is saved locally on this device. No sign-in required.
+                </p>
+            </div>
             
             <div className="text-center mb-8">
                 <h1 className="text-4xl font-black tracking-tighter text-slate-100 flex items-center justify-center gap-3 futuristic-title">
