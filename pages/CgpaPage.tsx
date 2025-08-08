@@ -42,6 +42,7 @@ const SgpaCalculator: FC = () => {
         let totalGradePoints = 0;
         let totalCredits = 0;
         let isCalculable = true;
+        let validCount = 0;
         
         subjects.forEach(sub => {
             const grade = parseFloat(sub.grade);
@@ -52,6 +53,7 @@ const SgpaCalculator: FC = () => {
             }
             totalGradePoints += grade * credits;
             totalCredits += credits;
+            validCount += 1;
         });
 
         const sgpa = totalCredits === 0 || !isCalculable ? '0.00' : (totalGradePoints / totalCredits).toFixed(2);
@@ -60,21 +62,22 @@ const SgpaCalculator: FC = () => {
             sgpa,
             totalCredits,
             totalGradePoints,
-            isCalculable
+            isCalculable,
+            validCount
         };
     }, [subjects]);
     
-    const { sgpa: calculatedSgpa, totalCredits, totalGradePoints } = sgpaCalculation;
+    const { sgpa: calculatedSgpa, totalCredits, totalGradePoints, validCount } = sgpaCalculation;
 
     // Increment global usage once per session when a valid SGPA is computed (> 0)
     useEffect(() => {
         if (!hasIncremented) {
             const sgpaVal = parseFloat(calculatedSgpa);
-            if (!isNaN(sgpaVal) && sgpaVal > 0) {
+            if (!isNaN(sgpaVal) && sgpaVal > 0 && validCount >= 2) {
                 incrementOncePerSession().finally(() => setHasIncremented(true));
             }
         }
-    }, [calculatedSgpa, hasIncremented]);
+    }, [calculatedSgpa, validCount, hasIncremented]);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -212,30 +215,33 @@ const CgpaCalculator: FC = () => {
         cgpaService.saveCgpaData(newData);
     };
 
-    const { currentCgpa, totalCredits, isCalculable } = useMemo(() => {
+    const { currentCgpa, totalCredits, isCalculable, validCount: validSemesters } = useMemo(() => {
         let totalCreditPoints = 0;
         let totalCredits = 0;
+        let validCount = 0;
         cgpaData.semesters.forEach(sem => {
             const sgpa = parseFloat(sem.sgpa);
             const credits = parseFloat(sem.credits);
             if (!isNaN(sgpa) && !isNaN(credits) && sgpa > 0 && sgpa <= 10 && credits > 0) {
                 totalCreditPoints += sgpa * credits;
                 totalCredits += credits;
+                validCount += 1;
             }
         });
         return {
             isCalculable: totalCredits > 0,
             currentCgpa: totalCredits > 0 ? (totalCreditPoints / totalCredits) : 0,
             totalCredits,
+            validCount,
         };
     }, [cgpaData]);
 
     // Increment global usage once per session when a valid CGPA is computable (> 0)
     useEffect(() => {
-        if (!hasIncremented && isCalculable && currentCgpa > 0) {
+        if (!hasIncremented && isCalculable && currentCgpa > 0 && validSemesters >= 2) {
             incrementOncePerSession().finally(() => setHasIncremented(true));
         }
-    }, [isCalculable, currentCgpa, hasIncremented]);
+    }, [isCalculable, currentCgpa, validSemesters, hasIncremented]);
 
      const predictedCgpa = useMemo(() => {
         const futureSgpa = parseFloat(prediction.futureSgpa);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { HashRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom';
 import CgpaPage from './pages/CgpaPage';
 import AboutPage from './pages/AboutPage';
-import { ChartPieIcon, MenuIcon, Gradients, UserCircleMono } from './components/VibrantIcons';
+import { MenuIcon, Gradients, UserCircleMono, MinimalCalculatorIcon } from './components/VibrantIcons';
 
 const PageTransition: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Lightweight CSS-based fade/slide without adding a heavy lib
@@ -55,7 +55,7 @@ const App: React.FC = () => {
 
             <nav className="hidden md:flex items-center gap-2">
               <NavLink to="/" className={linkClasses} end>
-                <ChartPieIcon className="w-5 h-5" />
+                <MinimalCalculatorIcon className="w-5 h-5" />
                 <span>Home</span>
               </NavLink>
               <NavLink to="/about" className={linkClasses}>
@@ -77,7 +77,7 @@ const App: React.FC = () => {
           {mobileOpen && (
             <div className="md:hidden pb-3 flex flex-col gap-2">
               <NavLink to="/" className={linkClasses} end onClick={() => setMobileOpen(false)}>
-                <ChartPieIcon className="w-5 h-5" />
+                <MinimalCalculatorIcon className="w-5 h-5" />
                 <span>Home</span>
               </NavLink>
               <NavLink to="/about" className={linkClasses} onClick={() => setMobileOpen(false)}>
