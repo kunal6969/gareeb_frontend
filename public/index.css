@@ -1,63 +1,48 @@
-/* Minimal global styles for MNIT LIVE */
+/* Minimal global styles for MNIT LIVE (Apple-like) */
 :root { color-scheme: light dark; }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
+body {
+	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
 
-/* Futuristic helpers referenced by components */
-.futuristic-title { text-shadow: 0 0 12px rgba(34,211,238,0.35); }
-.holo-card { background: linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.4)); border: 1px solid rgba(148,163,184,0.15); border-radius: 0.75rem; }
-.hologram-panel { position: relative; background: radial-gradient(120% 120% at 50% 0%, rgba(56,189,248,0.08), rgba(168,85,247,0.06) 45%, transparent 70%); border: 1px solid rgba(148,163,184,0.15); border-radius: 0.75rem; padding: 1.5rem; overflow: hidden; }
-.hologram-overlay { position: absolute; inset: 0; display: grid; place-items: center; backdrop-filter: blur(6px) saturate(1.2); background: linear-gradient(180deg, rgba(236,72,153,0.08), rgba(56,189,248,0.05)); }
-.content-blur { filter: blur(2px) opacity(0.5); }
-.custom-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(14,165,233,.5) transparent; }
-.custom-scrollbar::-webkit-scrollbar { width: 8px; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#22d3ee,#3b82f6); border-radius: 9999px; }
-
-@keyframes slide-down-glow { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
-.animate-slide-down-glow { animation: slide-down-glow .25s ease-out both; }
-@keyframes pulse-grid { 0% { opacity: .3 } 50% { opacity: .6 } 100% { opacity: .3 } }
-
-/* Premium gradient text logo with subtle shimmer */
+/* Clean brand text (no shimmer/animation) */
 .brand-logo, .brand-logo-platinum {
-	background: linear-gradient(90deg,#e5e7eb,#cfcfcf,#bfbfbf,#f3f4f6);
-	-webkit-background-clip: text;
-	background-clip: text;
-	color: transparent;
-	position: relative;
-	text-shadow: 0 10px 30px rgba(0,0,0,.28), 0 1px 0 rgba(255,255,255,.06), 0 0 0.5px rgba(255,255,255,.2);
+	color: inherit;
+	font-weight: 800;
+	letter-spacing: -0.02em;
 }
-.brand-logo::after, .brand-logo-platinum::after {
-	content: "";
-	position: absolute; inset: 0; border-radius: .4rem;
-	background: linear-gradient(120deg, transparent, rgba(255,255,255,.25), transparent);
-	transform: translateX(-120%);
-	animation: shimmer 12s ease-in-out infinite;
+
+/* Neutral cards and surfaces */
+.holo-card, .hologram-panel {
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 0.75rem;
 }
-@keyframes shimmer { 0%{transform: translateX(-120%)} 4%{transform: translateX(120%)} 100%{transform: translateX(120%)} }
-
-/* 3D tilt utility */
-.tilt {
-	transform-style: preserve-3d;
-	transition: transform .25s ease, box-shadow .25s ease;
+@media (prefers-color-scheme: dark) {
+	.holo-card, .hologram-panel { background: #0b1220; border-color: rgba(255,255,255,0.08); }
 }
-.tilt:hover { transform: perspective(900px) rotateX(3deg) rotateY(-3deg) translateZ(1px); }
 
-/* Parallax container */
-.parallax { perspective: 1200px; transform-style: preserve-3d; }
-.parallax-layer { position: absolute; inset: -20vh -10vw; will-change: transform; opacity: .35; }
+/* Remove overlays/filters in the minimal theme */
+.hologram-overlay { display: none; }
+.content-blur { filter: none; opacity: 1; }
 
-/* Button ripple */
-.ripple { position: relative; overflow: hidden; }
-.ripple:after { content: ""; position: absolute; border-radius: 50%; inset: 0; background: radial-gradient(circle, rgba(255,255,255,.35) 10%, transparent 11%); transform: scale(10); opacity: 0; transition: transform .6s, opacity .8s; }
-.ripple:active:after { transform: scale(0); opacity: .6; transition: 0s; }
-
-/* Animated underline */
+/* Underline for active nav without animation */
 .u-underline { position: relative; }
-.u-underline:after { content:""; position:absolute; left:0; bottom:-2px; height:2px; width:0; background: linear-gradient(90deg,#4338CA,#06B6D4,#8B5CF6); transition: width .25s ease; }
-.u-underline:hover:after, .u-underline[aria-current="page"]:after { width:100%; }
+.u-underline[aria-current="page"] { color: #111827; }
+@media (prefers-color-scheme: dark) { .u-underline[aria-current="page"] { color: #e5e7eb; } }
+.u-underline[aria-current="page"]:after {
+	content: "";
+	position: absolute; left: 0; bottom: -4px; height: 2px; width: 100%;
+	background: currentColor; opacity: .2;
+}
 
-/* Section reveals */
-@keyframes fade-up { from{opacity:0; transform: translateY(12px);} to{opacity:1; transform:none;} }
-.reveal { animation: fade-up .6s ease both; }
-@keyframes fade-scale { from{opacity:0; transform: translateY(10px) scale(.98);} to{opacity:1; transform: none;} }
-.fade-scale { animation: fade-scale .5s ease both; }
+/* Subtle custom scrollbar */
+.custom-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(100,116,139,.5) transparent; }
+.custom-scrollbar::-webkit-scrollbar { width: 8px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(100,116,139,.4); border-radius: 9999px; }
+
+/* Utility: subtle shadow */
+.subtle-shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04); }

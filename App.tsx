@@ -33,10 +33,10 @@ const App: React.FC = () => {
   }, []);
 
   const linkClasses = ({ isActive }: { isActive: boolean }) =>
-    `u-underline inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+    `u-underline inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
       isActive
-        ? 'text-cyan-300 bg-white/5 dark:bg-white/5'
-        : 'text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'
+        ? 'text-slate-900 dark:text-slate-100'
+        : 'text-slate-700 dark:text-slate-300'
     }`;
 
   return (
@@ -65,7 +65,7 @@ const App: React.FC = () => {
             </nav>
 
             <button
-              className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-md border border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-slate-200 ripple"
+              className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-md border border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-slate-200"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label="Toggle navigation"
             >
@@ -89,12 +89,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Parallax background layers */}
-      <div className="parallax pointer-events-none fixed inset-0 -z-10 opacity-60">
-        <div className="parallax-layer" style={{ transform: 'translateZ(-200px) scale(1.2) rotateZ(5deg)', background: 'radial-gradient(600px 600px at 20% 20%, rgba(67,56,202,.15), transparent 60%)' }} />
-        <div className="parallax-layer" style={{ transform: 'translateZ(-400px) scale(1.4)', background: 'radial-gradient(700px 700px at 80% 40%, rgba(6,182,212,.15), transparent 60%)' }} />
-        <div className="parallax-layer" style={{ transform: 'translateZ(-300px) scale(1.3) rotateZ(-8deg)', background: 'radial-gradient(500px 500px at 50% 90%, rgba(139,92,246,.12), transparent 60%)' }} />
-      </div>
+      {/* Background visuals removed for a clean, minimal look */}
 
       {/* Main content */}
       <main className="max-w-6xl mx-auto px-4 py-8">

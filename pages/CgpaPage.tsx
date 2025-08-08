@@ -3,25 +3,8 @@ import { CgpaData, Subject } from '../types';
 import * as cgpaService from '../services/cgpaService';
 import { GRADE_OPTIONS } from '../constants';
 import { Button, Input, Select } from '../components/UIElements';
-import { TrashIcon, PlusIcon, ChartPieIcon, SparkleIcon } from '../components/VibrantIcons';
+import { TrashIcon, PlusIcon, ChartPieIcon } from '../components/VibrantIcons';
 import LoadingIndicator from '../components/LoadingIndicator';
-
-// Animated number hook
-const useAnimatedNumber = (value: number, fractionDigits = 2) => {
-  const [display, setDisplay] = useState(value);
-  useEffect(() => {
-    const start = display; const end = value; const duration = 400; const startTs = performance.now();
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - startTs) / duration);
-      setDisplay(start + (end - start) * (1 - Math.cos(p * Math.PI)) / 2);
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [value]);
-  return display.toFixed(fractionDigits);
-};
 
 // --- Sub-components for the Futuristic UI ---
 const SgpaCalculator: FC = () => {
@@ -79,30 +62,29 @@ const SgpaCalculator: FC = () => {
     }, [subjects]);
     
     const { sgpa: calculatedSgpa, totalCredits, totalGradePoints } = sgpaCalculation;
-    const animatedSgpa = useAnimatedNumber(parseFloat(calculatedSgpa || '0') || 0, 2);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             <div className="holo-card p-6 space-y-6 relative z-10">
                 <div className="text-center">
-                    <h3 className="text-2xl font-bold text-cyan-300 mb-2">📚 Subject Grade Entry</h3>
-                    <p className="text-slate-400 text-sm">Enter your subject grades and credits to calculate SGPA</p>
+                    <h3 className="text-2xl font-semibold mb-2">Subject Grade Entry</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">Enter your subject grades and credits to calculate SGPA</p>
                 </div>
                 
                 <div className="space-y-4 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
                     {subjects.map((sub, index) => (
-                        <div key={sub.id} className="p-4 bg-slate-800/30 rounded-xl border border-slate-700/50 animate-slide-down-glow hover:shadow-lg transition-all duration-300" style={{ animationDelay: `${index * 50}ms` }}>
+                        <div key={sub.id} className="p-4 rounded-xl ring-1 ring-slate-200/80 dark:ring-white/10 bg-white dark:bg-[#0b1220]">
                             <div className="flex items-center gap-3 mb-3">
-                                <div className="flex-shrink-0 w-8 h-8 bg-cyan-500/20 rounded-full flex items-center justify-center border border-cyan-500/30">
-                                    <span className="font-bold text-cyan-300 text-sm">#{index + 1}</span>
+                                <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ring-1 ring-slate-200/80 dark:ring-white/10">
+                                    <span className="font-semibold text-slate-700 dark:text-slate-300 text-sm">#{index + 1}</span>
                                 </div>
-                                <h4 className="text-slate-300 font-semibold">Subject {index + 1}</h4>
+                                <h4 className="text-slate-700 dark:text-slate-200 font-medium">Subject {index + 1}</h4>
                                 {subjects.length > 1 && (
                                     <Button 
                                         variant="danger" 
                                         size="sm" 
                                         onClick={() => removeSubject(sub.id)} 
-                                        className="!p-2 ml-auto hover:scale-110 transition-transform"
+                                        className="!p-2 ml-auto"
                                         title="Remove Subject"
                                     >
                                         <TrashIcon className="w-4 h-4" />
@@ -118,7 +100,7 @@ const SgpaCalculator: FC = () => {
                                         onChange={value => handleSubjectChange(sub.id, 'grade', value)}
                                         options={GRADE_OPTIONS}
                                         placeholder="Select your grade"
-                                        className={sub.error === 'grade' ? 'animate-shake' : ''}
+                                        className={''}
                                         error={sub.error === 'grade' ? 'Please select a valid grade' : undefined}
                                     />
                                 </div>
@@ -130,7 +112,7 @@ const SgpaCalculator: FC = () => {
                                         placeholder="e.g., 3, 4, 1.5" 
                                         value={sub.credits} 
                                         onChange={e => handleSubjectChange(sub.id, 'credits', e.target.value)} 
-                                        className={`bg-slate-800 border-cyan-500/30 text-white !mt-0 ${sub.error === 'credits' ? 'animate-shake border-red-500' : ''}`}
+                                        className={`!mt-0 ${sub.error === 'credits' ? 'border-red-500' : ''}`}
                                         error={sub.error === 'credits' ? 'Enter valid credits (e.g., 3 or 1.5)' : undefined}
                                     />
                                 </div>
@@ -139,11 +121,11 @@ const SgpaCalculator: FC = () => {
                     ))}
                 </div>
                 
-                <div className="pt-4 border-t border-slate-700/50">
+                <div className="pt-4 border-t border-slate-200/70 dark:border-white/10">
                     <Button 
                         onClick={addSubject} 
                         leftIcon={<PlusIcon />} 
-                        className="w-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-200 hover:from-cyan-500/30 hover:to-blue-500/30 hover:border-cyan-400 transition-all duration-300"
+                        className="w-full"
                         size="lg"
                     >
                         Add Another Subject
@@ -151,35 +133,26 @@ const SgpaCalculator: FC = () => {
                 </div>
             </div>
             
-            <div className="holo-card p-8 text-center bg-gradient-to-br from-slate-800/50 to-slate-900/50">
+            <div className="holo-card p-8 text-center">
                 <div className="mb-6">
-                    <SparkleIcon className="w-12 h-12 text-cyan-400 mx-auto mb-4" />
-                    <h3 className="text-2xl font-bold text-cyan-300 mb-2">Calculated SGPA</h3>
-                    <div className="h-1 w-16 bg-gradient-to-r from-cyan-500 to-blue-500 mx-auto rounded-full"></div>
+                    <h3 className="text-2xl font-semibold mb-2">Calculated SGPA</h3>
+                    <div className="h-[2px] w-12 bg-slate-200 dark:bg-white/10 mx-auto rounded"></div>
                 </div>
                 
                 <div className="mb-6">
-                    <p className="text-8xl font-mono font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 mb-2" style={{ textShadow: '0 0 30px #00ffff99' }}>
-                        {animatedSgpa}
+                    <p className="text-7xl font-mono font-extrabold mb-2">
+                        {calculatedSgpa}
                     </p>
-                    <div className="text-slate-400 space-y-1">
-                        <p className="text-sm">Total Credits: <span className="text-cyan-300 font-semibold">{totalCredits}</span></p>
-                        <p className="text-sm">Grade Points: <span className="text-cyan-300 font-semibold">{totalGradePoints.toFixed(2)}</span></p>
+                    <div className="text-slate-500 dark:text-slate-400 space-y-1">
+                        <p className="text-sm">Total Credits: <span className="font-semibold text-slate-700 dark:text-slate-200">{totalCredits}</span></p>
+                        <p className="text-sm">Grade Points: <span className="font-semibold text-slate-700 dark:text-slate-200">{totalGradePoints.toFixed(2)}</span></p>
                     </div>
                 </div>
                 
                 <div className="space-y-2 text-sm">
                     {calculatedSgpa !== 'N/A' && (
-                        <div className={`p-3 rounded-lg border ${
-                            parseFloat(calculatedSgpa) >= 8 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' :
-                            parseFloat(calculatedSgpa) >= 6 ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300' :
-                            'bg-red-500/10 border-red-500/30 text-red-300'
-                        }`}>
-                            <p className="font-semibold">
-                                {parseFloat(calculatedSgpa) >= 8 ? '🎉 Excellent Performance!' :
-                                 parseFloat(calculatedSgpa) >= 6 ? '👍 Good Work!' :
-                                 '📚 Keep Improving!'}
-                            </p>
+                        <div className="p-3 rounded-lg ring-1 ring-slate-200/80 dark:ring-white/10">
+                            <p className="font-medium text-slate-700 dark:text-slate-300">SGPA status updated.</p>
                         </div>
                     )}
                 </div>
@@ -316,49 +289,39 @@ const CgpaCalculator: FC = () => {
 const CgpaPage: FC = () => {
     const [mode, setMode] = useState<'cgpa' | 'sgpa'>('cgpa');
 
-    useEffect(() => {
-        document.body.classList.add('futuristic-theme');
-        return () => document.body.classList.remove('futuristic-theme');
-    }, []);
+    useEffect(() => { /* no theme class; keep defaults */ }, []);
 
     return (
         <div className="relative min-h-[calc(100vh-250px)]">
-            {/* Background Grid */}
-            <div className="absolute inset-[-5rem] bg-gray-950 -z-10" style={{
-                backgroundImage: `
-                    linear-gradient(to right, rgba(0, 255, 255, 0.07) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(0, 255, 255, 0.07) 1px, transparent 1px)`,
-                backgroundSize: '40px 40px',
-                animation: 'pulse-grid 14s linear infinite',
-            }}></div>
-            
-            <div className="text-center mb-6">
-                <h1 className="text-4xl font-black tracking-tighter text-slate-100 flex items-center justify-center gap-3 futuristic-title">
-                    <ChartPieIcon className="w-10 h-10" /> CGPA / SGPA Calculator
+             {/* Background grid removed for minimal look */}
+             
+             <div className="text-center mb-6">
+                <h1 className="text-4xl font-extrabold tracking-tight flex items-center justify-center gap-3">
+                    <ChartPieIcon className="w-8 h-8" /> CGPA / SGPA Calculator
                 </h1>
-                <p className="text-cyan-300/80 font-mono mt-1 tracking-wide">Find your CGPA in real time</p>
-            </div>
-            
-            <div className="flex justify-center mb-8 p-1 rounded-full bg-slate-900/50 border border-cyan-500/20 max-w-sm mx-auto">
-                <button
-                    onClick={() => setMode('cgpa')}
-                    className={`px-6 py-2 rounded-full text-sm font-semibold transition-all w-1/2 ${mode === 'cgpa' ? 'bg-cyan-400/80 text-slate-900 shadow-[0_0_15px_rgba(0,255,255,0.5)]' : 'text-cyan-300'}`}
-                >
-                    CGPA Calculator
-                </button>
-                <button
-                    onClick={() => setMode('sgpa')}
-                    className={`px-6 py-2 rounded-full text-sm font-semibold transition-all w-1/2 ${mode === 'sgpa' ? 'bg-cyan-400/80 text-slate-900 shadow-[0_0_15px_rgba(0,255,255,0.5)]' : 'text-cyan-300'}`}
-                >
-                    SGPA Calculator
-                </button>
-            </div>
-            
-            <div className="animate-fade-in">
-              {mode === 'cgpa' ? <CgpaCalculator /> : <SgpaCalculator />}
-            </div>
-        </div>
-    );
-};
-
+                <p className="text-slate-500 dark:text-slate-400 mt-1">Find your CGPA in real time</p>
+             </div>
+             
+            <div className="flex justify-center mb-8 p-1 rounded-full bg-slate-100 dark:bg-white/5 ring-1 ring-slate-200/80 dark:ring-white/10 max-w-sm mx-auto">
+                 <button
+                     onClick={() => setMode('cgpa')}
+                     className={`px-6 py-2 rounded-full text-sm font-semibold w-1/2 ${mode === 'cgpa' ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-slate-100 ring-1 ring-slate-200/80 dark:ring-white/10' : 'text-slate-600 dark:text-slate-300'}`}
+                 >
+                     CGPA Calculator
+                 </button>
+                 <button
+                     onClick={() => setMode('sgpa')}
+                     className={`px-6 py-2 rounded-full text-sm font-semibold w-1/2 ${mode === 'sgpa' ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-slate-100 ring-1 ring-slate-200/80 dark:ring-white/10' : 'text-slate-600 dark:text-slate-300'}`}
+                 >
+                     SGPA Calculator
+                 </button>
+             </div>
+             
+             <div>
+               {mode === 'cgpa' ? <CgpaCalculator /> : <SgpaCalculator />}
+             </div>
+         </div>
+     );
+ }
+ 
 export default CgpaPage;
