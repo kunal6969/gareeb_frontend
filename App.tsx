@@ -85,8 +85,7 @@ const App: React.FC = () => {
       <footer className="mt-8 border-t border-slate-200/70 dark:border-white/10">
         <div className="max-w-6xl mx-auto px-4 py-6 text-sm text-slate-600 dark:text-slate-400 flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} MNIT LIVE. Built by <a className="text-cyan-500 hover:underline" href="https://www.linkedin.com/in/kunal-thapliyal-b308712ba/" target="_blank" rel="noreferrer">Kunal Thapliyal</a>.
-          </p>
+            © {new Date().getFullYear()} MNIT LIVE </p>
           <p className="opacity-80">Fast, minimal, and focused on CGPA/SGPA calculation.</p>
         </div>
       </footer>
