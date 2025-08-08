@@ -14,6 +14,3 @@ export const GRADE_OPTIONS = [
 // App-related constants
 export const APP_NAME = 'MNIT LIVE';
 export const APP_DESCRIPTION = 'Your ultimate CGPA tracker and academic helper for MNIT students';
-
-// Profile photo used on About page. Place your image at `public/images/kunal.jpg` or change this path.
-export const PROFILE_PHOTO = '/images/kunal.jpg';

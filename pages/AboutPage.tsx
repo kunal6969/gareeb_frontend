@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { PROFILE_PHOTO } from '../constants';
 
 const AboutPage: FC = () => {
   return (
@@ -8,7 +9,7 @@ const AboutPage: FC = () => {
         <div className="flex justify-center mb-8">
           <div className="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 p-1">
             <img 
-              src="/images/kunal.jpg" 
+              src={PROFILE_PHOTO} 
               alt="Kunal Thapliyal" 
               className="w-full h-full rounded-full object-cover bg-slate-200"
               onError={(e) => {
