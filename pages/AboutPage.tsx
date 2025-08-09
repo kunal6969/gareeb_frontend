@@ -8,13 +8,16 @@ const AboutPage: FC = () => {
         <div className="grid md:grid-cols-2 gap-10 items-center">
           {/* Clean photo card */}
           <div className="relative mx-auto">
-            <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-2xl subtle-shadow overflow-hidden bg-white dark:bg-white/5 ring-1 ring-slate-200/70 dark:ring-white/10">
-              <img
-                src={PROFILE_PHOTO}
-                alt="Kunal Thapliyal"
-                className="w-full h-full object-cover"
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
-              />
+            <div className="relative w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 rounded-full p-1 bg-white dark:bg-white/5 ring-1 ring-slate-200/70 dark:ring-white/10 subtle-shadow">
+              <div className="w-full h-full rounded-full overflow-hidden">
+                <img
+                  src={PROFILE_PHOTO}
+                  alt="Kunal Thapliyal"
+                  className="w-full h-full object-cover rounded-full select-none"
+                  draggable={false}
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                />
+              </div>
             </div>
           </div>
 
