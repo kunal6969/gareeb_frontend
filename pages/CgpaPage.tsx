@@ -5,6 +5,23 @@ import { GRADE_OPTIONS } from '../constants';
 import { Button, Input, Select } from '../components/UIElements';
 import { TrashIcon, PlusIcon } from '../components/VibrantIcons';
 import { MinimalCalculatorIcon } from '../components/VibrantIcons';
+// Map a score to a short motivational title by 0.5 ranges
+function getCgTitle(score: number): string {
+    if (!isFinite(score) || score <= 0) return '';
+    if (score >= 10) return 'Legendary';
+    if (score >= 9.5) return 'Outstanding';
+    if (score >= 9.0) return 'Excellent';
+    if (score >= 8.5) return 'Great';
+    if (score >= 8.0) return 'Strong';
+    if (score >= 7.5) return 'Good going';
+    if (score >= 7.0) return 'Safe';
+    if (score >= 6.5) return 'Steady';
+    if (score >= 6.0) return 'On track';
+    if (score >= 5.5) return 'Warming up';
+    if (score >= 5.0) return 'Getting started';
+    return 'Keep learning';
+}
+
 import LoadingIndicator from '../components/LoadingIndicator';
 
 // --- Sub-components ---
@@ -138,6 +155,16 @@ const SgpaCalculator: FC = () => {
                 
                 <div className="mb-6">
                     <p className="text-7xl font-mono font-extrabold mb-2 platinum-neon">{calculatedSgpa}</p>
+                    {/* SGPA title */}
+                    {(() => {
+                        const val = parseFloat(calculatedSgpa);
+                        const t = !isNaN(val) ? getCgTitle(val) : '';
+                        return t ? (
+                            <div className="inline-block mt-1 px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200 ring-1 ring-slate-200/80 dark:ring-white/10">
+                                {t}
+                            </div>
+                        ) : null;
+                    })()}
                     <div className="text-slate-500 dark:text-slate-400 space-y-1">
                         <p className="text-sm">Total Credits: <span className="font-semibold text-slate-700 dark:text-slate-200">{totalCredits}</span></p>
                         <p className="text-sm">Grade Points: <span className="font-semibold text-slate-700 dark:text-slate-200">{totalGradePoints.toFixed(2)}</span></p>
@@ -256,10 +283,16 @@ const CgpaCalculator: FC = () => {
             <div className="space-y-8">
                 <div className="hologram-panel">
                      <div className={predictedCgpa !== null ? 'content-blur' : ''}>
-                        <h3 className="text-xl font-semibold">Current CGPA</h3>
-                        <p className="text-6xl font-mono font-extrabold tracking-tight">
+                                                <h3 className="text-xl font-semibold">Current CGPA</h3>
+                                                <p className="text-6xl font-mono font-extrabold tracking-tight">
                              {isCalculable ? currentCgpa.toFixed(3) : '0.000'}
                          </p>
+                                                {/* CGPA title */}
+                                                {isCalculable && (
+                                                    <div className="inline-block mt-1 px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-slate-200 ring-1 ring-slate-200/80 dark:ring-white/10">
+                                                        {getCgTitle(currentCgpa)}
+                                                    </div>
+                                                )}
                         <p className="text-sm text-slate-500 dark:text-slate-400">Over {totalCredits} credits</p>
                      </div>
  
